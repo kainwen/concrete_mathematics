@@ -1,0 +1,400 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+
+ 
+\usepackage{amsthm}
+
+ 
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+
+
+\title{Concrete Mathematics}
+\author{kainwen}
+\date{July 2017}
+
+\begin{document}
+
+\maketitle
+
+\section{Recurrent Problems}
+
+\subsection{Ex 1.16}
+
+This problem is to solve a generalized version of the recurrent problem. The equations are:
+\begin{equation} \label{eq1}
+    \begin{split}
+    g(1) & = \alpha \\
+    g(2n) & = 3g(n) + \gamma n + \beta_0 \\
+    g(2n+1) & = 3g(n) + \gamma n + \beta_1 
+    \end{split}
+\end{equation}
+
+We have several tactics to solve this type of problems.
+\begin{itemize}
+    \item setting $g(n)$ to specific formulas, such as constant values or linear functions of $n$.
+    \item rewrite $n$ to binary form, then deduce the equation.
+\end{itemize}
+
+All the above tactics are based on the fundamental truth that $g(n)$ is a linear combination of $\alpha, \gamma, \beta_j$, that is $g(n)=A(n)\alpha + B(n)\gamma + C(n)\beta_0 + D(n)\beta_1$. This can be known by induction.
+
+First, we set $g(n)=1$, then
+
+\begin{equation}
+    \begin{split}
+        g(1) & = \alpha = 1 \\
+        g(2n) & = 3g(n) + \gamma n + \beta_0 = 1 \\
+        g(2n+1) & = 3g(n) + \gamma n + \beta_1 = 1
+    \end{split}
+\end{equation}
+
+Solve the above equations, we get $\alpha = 1, \gamma = 0, \beta_0 = \beta_1 = -2$. Replace these bindings in $g(n)$, we get
+\begin{equation}
+    g(n) = A(n) -2C(n) - 2D(n) = 1
+\end{equation}
+
+We need three more relations among $A, B, C, D$ to solve them.
+
+Next, we set $g(n)=n$, then
+
+\begin{equation}
+    \begin{split}
+        g(1) & = \alpha = 1 \\
+        g(2n) & = 2n = 3g(n) + \gamma n + \beta_0 = 3n + \gamma n + \beta_0 \\
+        g(2n+1) & = 2n + 1 = 3g(n) + \gamma n + \beta_1 = 3n + \gamma n + \beta_1
+    \end{split}
+\end{equation}
+
+Solve the above equations, we get $\alpha = 1, \gamma = -1, \beta_0 = 0,  \beta_1 = 1$. Replace these bindings in $g(n)$, we get
+\begin{equation}
+    g(n) = A(n) - B(n) + D(n) = n
+\end{equation}
+
+Let's continue to find more relations. This time, we set $\alpha = 1, \gamma = 0, \beta_0 = 0,  \beta_1 = 0$, now we have
+
+\begin{equation}
+    \begin{split}
+        g(1) & = 1 \\
+        g(2n) & = 3g(n) \\
+        g(2n+1) & = 3g(n)
+    \end{split}
+\end{equation}
+
+It is easy to show that $g(n) = A(n) = 3^{l-1}$, where $l$ is the length of binary string associated with $n$(with leading bit is $1$). Again, we can prove this by induction.
+
+We can finish this problem using the rewrite tactic. Let's rewrite $n$ into binary form, we get
+\begin{equation}
+    \begin{split}
+        g(n) & = g((\overline{b_{l-1}b_{l-2}\dots b_2b_1b_0})_2) (where b_{l-1}=1)\\
+             & = 3g((\overline{b_{l-1}b_{l-2}\dots b_2b_1})_2) + \gamma (\overline{b_{l-1}b_{l-2}\dots b_2b_1})_2 + \beta_{b_0}\\
+             & = 3(3g((\overline{b_{l-1}b_{l-2}\dots b_2})_2) + \gamma (\overline{b_{l-1}b_{l-2}\dots b_2})_2 + \beta_{b_1}) + \gamma (\overline{b_{l-1}b_{l-2}\dots b_2b_1})_2 + \beta_{b_0}\\
+             & = 3^2g((\overline{b_{l-1}b_{l-2}\dots b_2})_2) + (3^1(\overline{b_{l-1}b_{l-2}\dots b_2})_2 + 3^0(\overline{b_{l-1}b_{l-2}\dots b_2b_1})_2)\gamma + (3^1\beta_{b_1}+3^0\beta_{b_0})\\
+             & = \dots\\
+             & = 3^{l-1}g(b_{l-1}) + (\sum_{i=0}^{i=l-2}3^{i}\overline{(b_{l-1}\dots b_{i+1})_2})\gamma + \overline{(\beta_{b_{l-2}}\dots \beta_{b_0})_3}
+    \end{split}
+\end{equation}
+
+And this tells us the final relations:
+\begin{equation}
+    \begin{split}
+    A(n) & = 3^{l-1}\\
+    B(n) & = \sum_{i=0}^{i=l-2}3^{i}\overline{(b_{l-1}\dots b_{i+1})_2}, for \ n \ge 2
+    \end{split}
+\end{equation}
+
+Now, we have complete information to compute $A(n), B(n), C(n), D(n)$.
+
+\subsection{Ex 1.17}
+
+This problem extended Hanoi Tower problem to four pegs. By adding one peg, the problem gets complicated. The problem asks us to show the following equations:
+\begin{equation}
+    \begin{split}
+        W_{(n+1)n/2} \le 2W_{n(n-1)/2} + T_n \\
+        \text{find a }f(n) \text{ that for all }n \ge 0, W_{(n+1)n/2} \le f(n)
+    \end{split}
+\end{equation}
+
+First let's try to solve the second problem since it looks easier. Suppose the first inequation holds, and we set $W_{(n+1)n/2} = A(n)$ then we have:
+\begin{equation}
+    \begin{split}
+        &  A(n)  \le 2A(n-1) + 2^n - 1\\
+      \implies &  \frac{A(n)}{2^n}  \le \frac{A(n-1)}{2^{n-1}} + 1 - \frac{1}{2^n}
+    \end{split}
+\end{equation}
+
+Again, we set $\frac{A(n)}{2^n} = B(n)$, then we continue the process:
+\begin{equation}
+    \begin{split}
+      & \implies B(n)  \le B(n-1) + 1 - \frac{1}{2^n}\\
+      & \implies B(n) - B(n-1)  \le 1 - \frac{1}{2^n}\\
+    \end{split}
+\end{equation}
+
+Since the above is hold for all $n \ge 1$, then we have:
+\begin{equation}
+    \begin{split}
+        & \implies \sum_{i=1}^{n-1}(B(i+1)-B(i)) \le \sum_{i=1}^{n-1}(1-(\frac{1}{2})^{i+1})\\
+        & \implies B(n) - B(1) \le n-1-\frac{1}{2}(1-(\frac{1}{2})^{n-1})
+    \end{split}
+\end{equation}
+
+By transform $B(n)$ back to $W$, we get $W_{(n+1)n/2} \le 2^{n}(n-1) + 1$.
+
+Finally, we have to face the first problem. Since it just wants us to give an upper bound, all we need to do is to find a tactic that can achieve the problem(then by the definition of $W$ we can prove the inequation).
+
+Take a look at the subscript we can figure out $(n+1)n/2 = n(n-1)/2 + n$. This can help us find out a solution. 
+\begin{itemize}
+    \item We first ignore the largest $n$ disks, suppose we only have $n(n-1)/2$ disks. \item Then moving them to another peg(say C) takes minimal $W_{n(n-1)/2}$ steps. 
+    \item And now we must move the largest $n$ disks and we can not make use of peg C, the task is same as 3peg Hanoi problem, the corresponding number of minimal steps is $T_n$
+    \item Finally, we need to move the first $n(n-1)/2$ disks back onto the largest ones, of course it takes minimal $W_{n(n-1)/2}$ steps.
+\end{itemize}
+
+Above is just one of the feasible solution, so we have proved the first inequation.
+
+\section{Sums}
+
+\subsection{Ex 2.2}
+
+\subsection{Ex 2.32}
+
+This problem define a dot-subtract function $a \odot b = max(0, a - b)$, with this definition, we do some sums and prove equality. Let's first do the sum of left side $\sum_{k\ge0}min(k, x \odot k)$. It is obvious that when $x\le 0$, the sum is $0$ since each term of the sum is $0$. We now focus on the domain $x > 0$.
+
+\begin{equation}
+    \begin{split}
+        Left & = \sum_{k\ge 0} min(k, x \odot k)\\
+             & = \sum_{0 \le k \le x} min(k, x - k)\\
+             & = \sum_{0 \le k \le \lfloor x \rfloor} min(k, x - k)\\
+             & = \sum_{0 \le k \le \lfloor x \rfloor, k < x - k} k + \sum_{0 < k \le \lfloor x \rfloor, k \ge x - k}(x-k)\\
+             & = \sum_{0 \le k \le \lceil \frac{x}{2} \rceil-1}k + \sum_{\lceil \frac{x}{2} \rceil \le k \le \lfloor x \rfloor}(x-k)\\
+             & = \frac{(\lceil \frac{x}{2} \rceil-1)(\lceil \frac{x}{2} \rceil)}{2} + \sum_{\lceil \frac{x}{2} \rceil \le k \le \lfloor x \rfloor}x - \sum_{\lceil \frac{x}{2} \rceil \le k \le \lfloor x \rfloor}k\\
+             & = \frac{(\lceil \frac{x}{2} \rceil-1)(\lceil \frac{x}{2} \rceil)}{2} + (\lfloor x \rfloor - \lceil \frac{x}{2} \rceil + 1)x - \frac{(\lceil \frac{x}{2} \rceil + \lfloor x \rfloor)(\lfloor x \rfloor -  \lceil \frac{x}{2} \rceil + 1)}{2}\\
+             & = \frac{1}{2}\lceil \frac{x}{2} \rceil (\lceil \frac{x}{2} \rceil - 1) + \frac{1}{2}(\lfloor x \rfloor - \lceil \frac{x}{2} \rceil + 1)(2x - \lceil \frac{x}{2} \rceil - \lfloor x \rfloor)
+    \end{split}
+\end{equation}
+
+\section{Integer Function}
+
+\subsection{Ex 3.1}
+
+Any positive integer can be represented in binary form with leading bit is $1$. The length of the binary form is $L$. So $(N)_{10} = (1b_{L-2}\dots b_2b_1b_0)_{2}$. It is easy to see that:
+\begin{equation}
+    \begin{split}
+        & \implies  2^{L-1} \le N < 2^{L}\\
+        & \implies  2^{L-1} < N+1 \le 2^{L}\\
+        & \implies  L-1 < \log_2(N+1) \le L\\
+        & \implies  L = \lceil \log_2(N+1) \rceil\\
+        & \implies  m = L-1 = \lceil \log_2(N+1) \rceil - 1, \\
+        & \implies l = n - 2^m = n - 2^{\lceil \log_2(N+1) \rceil - 1}
+    \end{split}
+\end{equation}
+
+\subsection{Ex 3.2}
+
+\renewcommand{\labelenumi}{\alph{enumi}}
+\begin{enumerate}
+    \item $round(x) = \lfloor x \rfloor \mathbf{[} \lceil x \rceil - x > x - \lfloor x \rfloor \mathbf{]} + \lceil x \rceil \mathbf{[} \lceil x \rceil - x \le x - \lfloor x \rfloor \mathbf{]}$
+    \item $round(x) = \lfloor x \rfloor \mathbf{[} \lceil x \rceil - x \ge x - \lfloor x \rfloor \mathbf{]} + \lceil x \rceil \mathbf{[} \lceil x \rceil - x < x - \lfloor x \rfloor \mathbf{]}$
+\end{enumerate}
+
+
+\subsection{Ex 3.3}
+
+Let $X = \lfloor m\alpha \rfloor \frac{n}{\alpha}$, since the product of irrational number and integer is irrational, then we have
+
+\begin{equation}
+    \begin{split}
+       & \implies (m\alpha - 1)\frac{n}{\alpha} < X < m\alpha * \frac{n}{\alpha}\\
+       & \implies mn - \frac{n}{\alpha} < X < mn\\
+       & \implies mn - 1 < X < mn\\
+       & \implies \lfloor X \rfloor = mn - 1
+    \end{split}
+\end{equation}
+
+\subsection{Ex 3.5}
+
+We claim a theorem as following:
+
+\begin{theorem}
+$\forall n \in  \mathbb{N}^{+}, x \in \mathbb{R}, \{x\} < \frac{1}{n} \iff \lfloor nx \rfloor = n \lfloor x \rfloor$.
+\end{theorem}
+
+\begin{proof}
+    \begin{equation}
+        \begin{split}
+          & \{x\} < \frac{1}{n} \iff n\{x\} < 1 \\
+          & \{x\} < \frac{1}{n} \iff \lfloor n\{x\} \rfloor = 0 \\
+          & \{x\} < \frac{1}{n} \iff n\lfloor x \rfloor + \lfloor n\{x\} \rfloor  = n\lfloor x \rfloor\\
+          & \{x\} < \frac{1}{n} \iff \lfloor n\lfloor x \rfloor  + n\{x\}\rfloor = n\lfloor x \rfloor\\
+          & \{x\} < \frac{1}{n} \iff \lfloor n(\lfloor x \rfloor + \{x\}) \rfloor = n\lfloor x \rfloor\\
+          & \{x\} < \frac{1}{n} \iff \lfloor nx \rfloor = n\lfloor x \rfloor
+        \end{split}
+    \end{equation}
+\end{proof}
+
+\subsection{Ex 3.7}
+
+We could divide $X_n$ into groups. Each group contains exactly $m$ elements.
+\begin{equation}
+    \begin{split}
+        & Group_0: x_0, x_1, x_2, \dots x_{m-1}\\
+        & Group_1: x_m, x_{m+1}, x_{m+2}, \dots x_{2m-1}\\
+        & \dots \dots\\
+        & Group_k: x_{km}, x_{km+1}, x_{km+2}, \dots x_{(k+1)m-1}
+    \end{split}
+\end{equation}
+
+From $x_n = n (0 \le n < m)$ we can know each element of Group $0$. This is the base case. By induction step(that is $x_n = x_{n-m} + 1(n\ge m)$, we could compute the next group based on current step.
+
+The first several groups are:
+\begin{equation}
+    \begin{split}
+        G_0 & = (0, 1, 2, \dots, m-1)\\
+        G_1 & = (1, 2, 3, \dots, m)\\
+        G_2 & = (2, 3, 4, \dots, m+1)\\
+        \dots
+    \end{split}
+\end{equation}
+
+The pattern is obvious: $G_k = (k, k+1, \dots, k+m-1)$. And the proof is quite easy, just using induction.
+
+Finally, let's compute $x$ from $G$. 
+\begin{equation}
+    \begin{split}
+        G_k = (x_{km}, x_{km+1}, \dots, x_{(k+1)m-1}) = (k, k+1, \dots, k+m-1).
+    \end{split}
+\end{equation}
+ 
+Given the index $i$ of $x$, if $x_i$ belongs to group $k$, then $km \le i < (k+1)m$, that is $k \le \frac{i}{m} < (k+1)$, then $k = \lfloor \frac{i}{m} \rfloor$. So $x_i = \frac{i}{m} + (i \bmod m)$
+
+\subsection{Ex 3.25}
+
+Often this kind of problem can be proved by Induction. Let's first prove a lemma that is useful for proof of \textbf{Knuth Number}.
+
+\begin{lemma}
+$\forall n \in \mathbb{N}, 1 + \min(2\lfloor \frac{n}{2} \rfloor, 3\lfloor \frac{n}{3} \rfloor) \ge n - 1$.
+\end{lemma}
+
+\begin{proof}
+$n$ can be divided into different groups according to the value of $r = n \bmod 6$m, that is $n = 6k + r$, for $k=\lfloor \frac{n}{6} \rfloor, r = n \bmod 6$. Then let's prove it case by case:
+\begin{itemize}
+    \item When $r=0, n=6k$, then $1 + \min(2\lfloor \frac{n}{2} \rfloor, 3\lfloor \frac{n}{3} \rfloor) = 1 + \min(6k, 6k) = 1 + 6k \ge n - 1$
+    \item When $r=1, n=6k+1$, then $1 + \min(2\lfloor \frac{n}{2} \rfloor, 3\lfloor \frac{n}{3} \rfloor) = 1 + \min(6k + 2\lfloor \frac{1}{2} \rfloor, 6k + 3\lfloor \frac{1}{3} \rfloor) = 1 + 6k = n \ge n - 1$
+    \item When $r=2, n=6k+2$, then $1 + \min(2\lfloor \frac{n}{2} \rfloor, 3\lfloor \frac{n}{3} \rfloor) = 1 + \min(6k+2\lfloor \frac{2}{2} \rfloor, 6k+3\lfloor \frac{2}{3} \rfloor) = 1 + 6k = n - 1 \ge n - 1$
+    \item When $r=3, n=6k+3$, then $1 + \min(2\lfloor \frac{n}{2} \rfloor, 3\lfloor \frac{n}{3} \rfloor) = 1 + \min(6k+2\lfloor \frac{3}{2} \rfloor, 6k+3\lfloor \frac{3}{3} \rfloor) = 1 + 6k + 3 = n + 1 \ge n - 1$
+    \item When $r=4, n=6k+4$, then $1 + \min(2\lfloor \frac{n}{2} \rfloor, 3\lfloor \frac{n}{3} \rfloor) = 1 + \min(6k+2\lfloor \frac{4}{2} \rfloor, 6k+3\lfloor \frac{4}{3} \rfloor) = 1 + 6k + 3= n \ge n - 1$
+    \item When $r=5, n=6k+5$, then $1 + \min(2\lfloor \frac{n}{2} \rfloor, 3\lfloor \frac{n}{3} \rfloor) = 1 + \min(6k+2\lfloor \frac{5}{2} \rfloor, 6k+3\lfloor \frac{5}{3} \rfloor) = 1 + 6k + 3 = n - 1 \ge n - 1$
+\end{itemize}
+Take all the above cases into account, the lemma holds.
+\end{proof}
+
+Now, let's prove the \textbf{Knuth Number} bound theorem.
+
+\begin{theorem}
+\textbf{Knuth Number} is defined as following:
+\begin{equation}
+    \begin{split}
+        & K_0 = 1\\
+        & K_{n+1} = 1 + \min(2K_{\lfloor \frac{n}{2} \rfloor}, 3K_{\lfloor \frac{n}{3} \rfloor}), \forall n \in \mathbb{N}
+    \end{split}
+\end{equation}
+Then, $\forall n \in \mathbb{N}, K_n \ge n$.
+\end{theorem}
+
+We can print some cases when $n$ is small, to find some clues: $K_0=1, K_1=3, K_2=4, K_3 = 7 \dots$. Let's prove a more strong lemma to show that $K_n \ge n + 1, \forall n > 1$.
+
+\begin{proof}
+The proof is based on induction:
+\begin{itemize}
+    \item When $n=1, K_1 = 3 > 1 + 2$, so the lemma holds for base case.
+    \item Suppose $K_n \ge n + 2$ holds for all $1 \le i \le n$, then
+          \begin{equation}
+          \begin{split}
+              K_{n+1} & = 1 + \min(2K_{\lfloor \frac{n}{2} \rfloor}, 3K_{\lfloor \frac{n}{3} \rfloor})\\
+                      & \ge 1 + \min(2(\lfloor \frac{n}{2} \rfloor + 2), 3(\lfloor \frac{n}{3} \rfloor +2))\\
+                      & \ge 1 + 4 + 2 \min(2\lfloor \frac{n}{2} \rfloor , 3 \lfloor \frac{n}{3} \rfloor)\\
+                      & \ge 4 + n - 1 = (n + 1) + 2
+          \end{split}
+          \end{equation}
+\end{itemize}
+\end{proof}
+We can conclude that $K_n \ge n + 2, \forall n \ge 1$. This of course tells us $K_n \ge n, \forall n \ge 1$. And for the case $n < 1$, $K_0=1\ge0$. So $K_n \ge n, \forall n \in \mathbb{N}$.
+
+\subsection{Ex 3.35}
+
+Let's try to simplify $\lfloor (n+1)^2  n! e \rfloor \bmod$. Look at $e$ and $n!$, these two term tell us that we should think of $Taylor's formula$. We can expand $e^x$ at the point $x_0=0$ and firstly let's suppose $n>2$:
+\begin{equation}
+    \begin{split}
+    & e^x  = \sum_{i\ge 0}^{n+1}\frac{1}{i!}x^i + \frac{1}{(n+2)!}\xi^{n+2}, 0 \le \xi \le x\\
+    \implies & e  = 1 + 1 + \frac{1}{2!} + \dots + \frac{1}{n!} + \frac{1}{(n+1)!} + \frac{1}{(n+2)!}\xi^{n+2}, 0\le \xi \le 1\\
+    \implies & (n+1)^2n!e = K n + (n+1)^2 + (n+1) + \frac{n+1}{n+2}\xi^{n+2}, 0\le \xi \le 1, K \in \mathbb{N}\\
+    \implies & (n+1)^2n!e = K'n + 2 + \frac{n+1}{n+2}\xi^{n+2}, 0\le \xi \le 1, K' \in \mathbb{N}\\
+    \implies & \lfloor (n+1)^2n! \rfloor = K'n + 2\\
+    \implies & \lfloor (n+1)^2n! \rfloor \bmod n = 2, n > 2
+    \end{split}
+\end{equation}
+
+For $n\le 2$, we simply calculate it and get $\lfloor (n+1)^2n! \rfloor \bmod n  = 0, n \le 2$.
+
+\subsection{Ex 3.37}
+
+The idea that firstly comes to my mind is to divide k into groups:
+\begin{equation}
+    \begin{split}
+        & group(0): 0, 1, 2, \dots, n-1\\
+        & group(1): n, n+1, n+2, \dots, n + (n-1)\\
+        & \dots\\
+        & group(j): jn, jn+1, jn+2, \dots, jn + (n-1)\\
+        & \dots\\
+        & group(\lfloor \frac{m}{n} \rfloor): \lfloor \frac{m}{n} \rfloor n, \lfloor \frac{m}{n} \rfloor n + 1, \dots, \lfloor \frac{m}{n} \rfloor + r - 1,
+               (r = m \bmod n = m - \lfloor \frac{m}{n} \rfloor n)
+    \end{split}
+\end{equation}
+
+So, we can transform the sum into:
+
+\def \floormn {\lfloor \frac{m}{n} \rfloor}
+
+\begin{equation}
+    \begin{split}
+        & \sum_{0\le k < m}(\lfloor \frac{m+k}{n} \rfloor - \lfloor \frac{k}{n} \rfloor)\\
+      = & \sum_{0\le j \le \floormn}\sum_{k\in group(j)} (\lfloor \frac{m+k}{n} \rfloor - \lfloor \frac{k}{n} \rfloor)\\
+      = & \sum_{0\le j < \floormn}\sum_{0\le b \le n-1} (\lfloor \frac{m+jn+b}{n} \rfloor - \lfloor \frac{jn+b}{n} \rfloor) + \sum_{j=\floormn}\sum_{0\le b < r} (\lfloor \frac{m+jn+b}{n} \rfloor - \lfloor \frac{jn+b}{n} \rfloor)
+    \end{split}
+\end{equation}
+
+Let's first tackle with the first part sum:
+\begin{equation}
+    \begin{split}
+        & \sum_{0\le j < \floormn}\sum_{0\le b \le n-1} (\lfloor \frac{m+jn+b}{n} \rfloor - \lfloor \frac{jn+b}{n} \rfloor) \\
+      = & \sum_{0\le j < \floormn}\sum_{0\le b \le n-1} (\lfloor \frac{m+jn+b}{n} -j \rfloor - \lfloor \frac{b}{n} \rfloor) \\
+      = & \sum_{0\le j < \floormn}\sum_{0\le b \le n-1} (\lfloor \frac{m+b}{n} \rfloor\\
+      = & \sum_{0\le j < \floormn}\sum_{0\le b \le n-1} (\lfloor \frac{n\floormn + r + b}{n} \rfloor)\\
+      = & \sum_{0\le j < \floormn}\sum_{0\le b \le n-1} \floormn + 
+          \sum_{0\le j < \floormn}\sum_{0\le b \le n-1} \lfloor \frac{r+b}{n} \rfloor\\
+      = & n(\floormn)^2 + \sum_{0\le j < \floormn}\sum_{0\le b \le n-1} \left[ r+b\ge n \right] \\
+      = & n(\floormn)^2 + \sum_{0\le j < \floormn} \sum \left[n-r \le b \le n-1\right]\\
+      = & n(\floormn)^2 + \sum_{0\le j < \floormn} r\\
+      = & n(\floormn)^2 + r\floormn \\
+      = & m\floormn
+    \end{split}
+\end{equation}
+
+Our last job is to finish the calculation of the second part sum:
+\begin{equation}
+    \begin{split}
+        & \sum_{j=\floormn}\sum_{0\le b < r} (\lfloor \frac{m+jn+b}{n} \rfloor - \lfloor \frac{jn+b}{n} \rfloor) \\
+      = & \sum_{0\le b < r}\lfloor \frac{m+b}{n} \rfloor\\
+      = & \sum_{0\le b < r} \lfloor \frac{n\floormn + r + b}{n} \rfloor\\
+      = & r\floormn + \sum_{0 \le b < r}\left[r+b\ge n\right]\\
+      = & r\floormn + \sum_{b}\left[n-r \le b < r \right]\\
+      = & r\floormn + \max{(0, 2r-n)}
+    \end{split}
+\end{equation}
+
+So we have$\sum_{0\le k < m}(\lfloor \frac{m+k}{n} \rfloor - \lfloor \frac{k}{n} \rfloor) = (m + (m \bmod n))\floormn + \max{(0, 2(m \bmod n)-n)}$.
+\end{document}
