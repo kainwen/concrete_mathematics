@@ -20,6 +20,8 @@ The project is about the answer of CM in verbose mode.
 
 The sharelatex link is : https://www.sharelatex.com/project/596d597681a6531f687344c6
 
+The papeeria link is https://www.papeeria.com/p/d871e92bf0bff36e92ec9debc469ff71
+
 The repo here is to make this project a cooperation project for me and my friends who
 love this book.
 

@@ -397,4 +397,23 @@ Our last job is to finish the calculation of the second part sum:
 \end{equation}
 
 So we have$\sum_{0\le k < m}(\lfloor \frac{m+k}{n} \rfloor - \lfloor \frac{k}{n} \rfloor) = (m + (m \bmod n))\floormn + \max{(0, 2(m \bmod n)-n)}$.
+
+\subsection{Ex 3.45}
+This bonus problem seems easy if we have solved the previous related problem. Let's set $Y_n=\frac{1}{2}A_n$, then
+\begin{equation}
+    \begin{split}
+        Y_0 = & \frac{1}{2}A_0 = m \implies A_0 = 2m\\
+        Y_n = & 2Y_{n-1}^2 - 1 \implies \frac{1}{2}A_n = 2(\frac{1}{2}A_{n-1})^2 - 1 \implies A_n = A_{n-1}^2 - 2
+    \end{split}
+\end{equation}
+
+We claim that
+\begin{equation}
+    \begin{split}
+        A_n = x^{2^n} + \frac{1}{x^{2^n}}, x \text{ is the root of } x + \frac{1}{x} = 2m
+    \end{split}
+\end{equation}
+
+This can be proved using induction. And since $m\in \mathbb{Z}^+$, equation $x+\frac{1}{x}=2m$ always has real root. So $Y_n=\frac{1}{2}(x^{2^n} + \frac{1}{x^{2^n}}), x = m+\sqrt{m^2-1}$.
+
 \end{document}
