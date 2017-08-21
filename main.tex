@@ -416,4 +416,20 @@ We claim that
 
 This can be proved using induction. Since $m\in \mathbb{Z}^+$, equation $x+\frac{1}{x}=2m$ always has real root. So $Y_n=\frac{1}{2}(x^{2^n} + \frac{1}{x^{2^n}}), x = m+\sqrt{m^2-1}$.
 
+\subsection{Ex 3.48}
+
+This problem is simple if you know how to expand $(a+b)^3$.
+\begin{proof}
+    \begin{equation}
+        \begin{split}
+            & x^3 = 3x \lfloor x \lfloor x \rfloor  \rfloor + 3\{x\}\{x\lfloor x \rfloor\} + \{x\}^3 - 3\lfloor x \rfloor \lfloor x \lfloor x \rfloor \rfloor + \lfloor x \rfloor ^ 3\\
+       \iff & (\lfloor x \rfloor + \{x\})^3 =  3x \lfloor x \lfloor x \rfloor  \rfloor + 3\{x\}\{x\lfloor x \rfloor\} + \{x\}^3 - 3\lfloor x \rfloor \lfloor x \lfloor x \rfloor \rfloor + \lfloor x \rfloor ^ 3\\    
+       \iff & x\lfloor x \lfloor x \rfloor \rfloor + \{x\}\{x \lfloor x \rfloor \} = \lfloor x \rfloor ^2 \{x\} + \lfloor x \rfloor \{x\}^2 + \lfloor x \rfloor \lfloor x \lfloor x \rfloor \rfloor\\
+       \iff & (x - \lfloor x \rfloor)\lfloor x \lfloor x \rfloor \rfloor + \{x\}\{x\lfloor x \rfloor\} = \lfloor x \rfloor \{ x \}(\lfloor x \rfloor + \{ x \})\\
+       \iff & \{ x \}(\lfloor x \lfloor x \rfloor \rfloor + \{x \lfloor x \rfloor\}) = \lfloor x \rfloor \{ x \} x \\
+       \iff & \{x\} x \lfloor x \rfloor = \lfloor x \rfloor\{ x \}x, \text{  obviously.}
+        \end{split}
+    \end{equation}
+\end{proof}
+
 \end{document}
