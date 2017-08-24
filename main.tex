@@ -6,6 +6,9 @@
 \usepackage[english]{babel}
 
  
+\usepackage{minted}
+
+ 
 \usepackage{amsthm}
 
  
@@ -431,5 +434,71 @@ This problem is simple if you know how to expand $(a+b)^3$.
         \end{split}
     \end{equation}
 \end{proof}
+
+\section{Number Theory}
+
+\subsection{Ex 4.1}
+
+We can write a program to search this number. The erlang program is shown below:
+\begin{minted}{erlang}
+    -module(factor_num).
+
+    -export([factor_num/1, search_factor_num/1]).
+
+    factor_num(N) ->
+        length([1 || I <- lists:seq(1, N), N rem I =:= 0]).
+
+    search_factor_num(N) ->
+        search_factor_num_loop(N, 1).
+
+    search_factor_num_loop(N, M) ->
+        case factor_num(M) =:= N of
+	        true -> M;
+	        false ->
+	            search_factor_num_loop(N, M+1)
+        end.
+    %% factor_num:search_factor_num(6) --> 12
+\end{minted}
+
+The integer we wanted is $12$.
+
+\subsection{Ex 4.2}
+
+The first theorem we want to prove is that
+\begin{theorem}
+   $$ \forall m, n \in \mathbb{N}^+, gcd(m, n) * lcm(m, n) = m*n.$$
+\end{theorem}
+
+\begin{proof}
+    We know that $x = \frac{mn}{gcd(m, n)}$ is a multiple of both $m$ and $n$, since
+    \begin{itemize}
+        \item $\frac{x}{n} = \frac{m}{gcd(m, n)}$ is integer
+        \item $\frac{x}{m} = \frac{n}{gcd(m, n)}$ is integer
+    \end{itemize}
+    The we need to show that $x$ is the least common multiple of $m$ and $n$.
+    
+    Notice that any common multiple of $m$ and $n$ must be in this form $\frac{mn}{k}$, $k \in \mathbb{N}^+$, and $x = \frac{mn}{gcd(m, n)}$.
+    
+    So if $\exists y \in \mathbb{N}^+$, and $y = \frac{mn}{l}$ and $y$ is the least common multiple of $m$ and $n$, $y < x$. So $l > gcd(m, n)$. And
+    \begin{itemize}
+        \item $\frac{y}{n} = \frac{m}{l}$ is integer, so $l$ is a factor of $m$
+        \item $\frac{y}{m} = \frac{n}{l}$ is integer, so $l$ is a factor of $n$
+    \end{itemize}
+    This implies that $l$ is a common factor for both $m$ and $n$. However, $l > gcd(m,n)$, so $l$ cannot be a common factor for both $m$ and $n$. We fall into contradiction.
+    
+    So there is no common multiple of $m$ and $n$ can be smaller than $x$. That is $x$ is the least common multiple of $m$ and $n$.
+    
+\end{proof}
+
+For the last problem, we can solve as following:
+\begin{equation}
+    \begin{split}
+        & gcd(m, n) = gcd(n \bmod m, m)\\
+        & gcd(m, n) * lcm(m, n) = m * n\\
+        & gcd(n \bmod m, m) * lcm(n \bmod m, m) = (n \bmod m) * m\\
+        \implies & \frac{lcm(m, n)}{lcm(n \bmod m, m)} = \frac{n}{n \bmod m}\\
+        \implies & lcm(m, n) = \frac{n}{n \bmod m} lcm(n \bmod m, m)
+    \end{split}
+\end{equation}
 
 \end{document}
