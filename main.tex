@@ -7,14 +7,14 @@
 
  
 \usepackage{minted}
-
- 
 \usepackage{amsthm}
 
- 
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{corollary}{Corollary}[theorem]
 \newtheorem{lemma}[theorem]{Lemma}
+
+\usemintedstyle{emacs}
+
 
 
 \title{Concrete Mathematics}
@@ -440,7 +440,16 @@ This problem is simple if you know how to expand $(a+b)^3$.
 \subsection{Ex 4.1}
 
 We can write a program to search this number. The erlang program is shown below:
-\begin{minted}{erlang}
+
+\begin{minted}
+[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontsize=\footnotesize,
+linenos
+]
+{erlang}
     -module(factor_num).
 
     -export([factor_num/1, search_factor_num/1]).
@@ -500,5 +509,30 @@ For the last problem, we can solve as following:
         \implies & lcm(m, n) = \frac{n}{n \bmod m} lcm(n \bmod m, m)
     \end{split}
 \end{equation}
+
+\subsection{Ex 4.7}
+
+Let's set the number to start from 0. So the people are numbered: $0, 1, 2, \dots, 9$. And the kill-out sequence is $9,k-1,k$ now. Every mth people are killed out, so:
+\begin{itemize}
+    \item the first killed out number is 9, it tells us: $m \bmod 10 = 9$.
+    \item Then we move to $0$, start counting, now there are only 9 people numbered $0,1,\dots,8$, and the killed out number is $k-1$, this tells us $m \bmod 9 = k-1$.
+    \item Now, there are only 8 people alive, and we start at number $k$ to count for the third kill-out. The third killed out number is $k$, that is we start from $k$, count $m$ steps, return to $k$. It tells us that $m \bmod 8 = 0$.
+\end{itemize}
+
+The problem asks us to prove:
+\begin{theorem}
+   $\forall 1 \le k \le 9, \forall m \in \mathbb{N},$ the following equations have no solutions:
+   \begin{equation}
+       \begin{split}
+           & m \bmod 10 = 9\\
+           & m \bmod 9 = k - 1\\
+           & m \bmod 8 = 0
+       \end{split}
+   \end{equation}
+\end{theorem}
+
+\begin{proof}
+    $m \bmod 8 = 0$ tells $m$ is even. However $m \bmod 10=9$ tells us $m$ is odd. This is contradictory.
+\end{proof}
 
 \end{document}
